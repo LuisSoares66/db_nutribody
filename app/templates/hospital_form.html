@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Novo Hospital{% endblock %}
+{% block header %}Novo Hospital{% endblock %}
+
+{% block content %}
+<form method="POST" class="card">
+  <div class="row">
+    <div class="col">
+      <label>Nome do Hospital</label>
+      <input name="nome_hospital" required>
+    </div>
+    <div class="col">
+      <label>CEP</label>
+      <input name="cep">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <label>Endereço</label>
+      <input name="endereco">
+    </div>
+    <div class="col">
+      <label>Número</label>
+      <input name="numero">
+    </div>
+    <div class="col">
+      <label>Complemento</label>
+      <input name="complemento">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <label>Cidade</label>
+      <input name="cidade">
+    </div>
+    <div class="col">
+      <label>Estado</label>
+      <input name="estado" maxlength="2">
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-green" type="submit">Salvar</button>
+    <a href="{{ url_for('main.hospitais') }}"><button class="btn-light" type="button">Voltar</button></a>
+  </div>
+</form>
+{% endblock %}

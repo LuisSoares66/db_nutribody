@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}Dados{% endblock %}
+{% block header %}Dados do Hospital - {{ hospital.nome_hospital }}{% endblock %}
+
+{% block content %}
+<div class="top-bar">
+  <a href="{{ url_for('main.hospitais') }}"><button class="btn-light">← Voltar</button></a>
+  <a href="{{ url_for('main.hospital_info', hospital_id=hospital.id) }}"><button class="btn-light">Info</button></a>
+  <a href="{{ url_for('main.contatos', hospital_id=hospital.id) }}"><button class="btn-light">Contatos</button></a>
+  <a href="{{ url_for('main.hospital_produtos', hospital_id=hospital.id) }}"><button class="btn-light">Produtos</button></a>
+</div>
+
+<form method="POST" class="card">
+  <div class="row">
+    <div class="col">
+      <label>Especialidade</label>
+      <input name="especialidade" value="{{ dados.especialidade or '' }}">
+    </div>
+    <div class="col">
+      <label>Leitos</label>
+      <input name="leitos" value="{{ dados.leitos or '' }}">
+    </div>
+    <div class="col">
+      <label>Leitos UTI</label>
+      <input name="leitos_uti" value="{{ dados.leitos_uti or '' }}">
+    </div>
+  </div>
+
+  <label>Fatores decisórios</label>
+  <textarea name="fatores_decisorios">{{ dados.fatores_decisorios or '' }}</textarea>
+
+  <label>Prioridades de atendimento</label>
+  <textarea name="prioridades_atendimento">{{ dados.prioridades_atendimento or '' }}</textarea>
+
+  <div class="row">
+    <div class="col">
+      <label>Certificação</label>
+      <input name="certificacao" value="{{ dados.certificacao or '' }}">
+    </div>
+    <div class="col">
+      <label>EMTN</label>
+      <input name="emtn" value="{{ dados.emtn or '' }}">
+    </div>
+  </div>
+
+  <label>EMTN - membros</label>
+  <textarea name="emtn_membros">{{ dados.emtn_membros or '' }}</textarea>
+
+  <div class="row">
+    <div class="col">
+      <label>Comissão de feridas</label>
+      <input name="comissao_feridas" value="{{ dados.comissao_feridas or '' }}">
+    </div>
+    <div class="col">
+      <label>Comissão - membros</label>
+      <input name="comissao_feridas_membros" value="{{ dados.comissao_feridas_membros or '' }}">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <label>Nutrição enteral/dia</label>
+      <input name="nutricao_enteral_dia" value="{{ dados.nutricao_enteral_dia or '' }}">
+    </div>
+    <div class="col">
+      <label>Pacientes TNO/dia</label>
+      <input name="pacientes_tno_dia" value="{{ dados.pacientes_tno_dia or '' }}">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <label>Altas orientadas</label>
+      <input name="altas_orientadas" value="{{ dados.altas_orientadas or '' }}">
+    </div>
+    <div class="col">
+      <label>Quem orienta a alta</label>
+      <input name="quem_orienta_alta" value="{{ dados.quem_orienta_alta or '' }}">
+    </div>
+  </div>
+
+  <label>Protocolo evolução dieta</label>
+  <input name="protocolo_evolucao_dieta" value="{{ dados.protocolo_evolucao_dieta or '' }}">
+
+  <label>Qual (protocolo)</label>
+  <input name="protocolo_evolucao_dieta_qual" value="{{ dados.protocolo_evolucao_dieta_qual or '' }}">
+
+  <label>Protocolo lesão por pressão</label>
+  <input name="protocolo_lesao_pressao" value="{{ dados.protocolo_lesao_pressao or '' }}">
+
+  <label>Maior desafio</label>
+  <textarea name="maior_desafio">{{ dados.maior_desafio or '' }}</textarea>
+
+  <label>Dieta padrão</label>
+  <input name="dieta_padrao" value="{{ dados.dieta_padrao or '' }}">
+
+  <label>Bomba de infusão (modelo)</label>
+  <input name="bomba_infusao_modelo" value="{{ dados.bomba_infusao_modelo or '' }}">
+
+  <label>Fornecedor</label>
+  <input name="fornecedor" value="{{ dados.fornecedor or '' }}">
+
+  <div class="row">
+    <div class="col">
+      <label>Convênio empresas</label>
+      <input name="convenio_empresas" value="{{ dados.convenio_empresas or '' }}">
+    </div>
+    <div class="col">
+      <label>Modelo pagamento</label>
+      <input name="convenio_empresas_modelo_pagamento" value="{{ dados.convenio_empresas_modelo_pagamento or '' }}">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <label>Reembolso</label>
+      <input name="reembolso" value="{{ dados.reembolso or '' }}">
+    </div>
+    <div class="col">
+      <label>Modelo compras</label>
+      <input name="modelo_compras" value="{{ dados.modelo_compras or '' }}">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <label>Contrato tipo</label>
+      <input name="contrato_tipo" value="{{ dados.contrato_tipo or '' }}">
+    </div>
+    <div class="col">
+      <label>Nova etapa negociação</label>
+      <input name="nova_etapa_negociacao" value="{{ dados.nova_etapa_negociacao or '' }}">
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-green" type="submit">Salvar Dados</button>
+  </div>
+</form>
+{% endblock %}

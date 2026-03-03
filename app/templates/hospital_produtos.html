@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 style="color:#0b7d3e;">Produtos — {{ hospital.nome_hospital }}</h2>
+
+<div style="margin-bottom:20px;">
+  <a href="{{ url_for('main.hospitais') }}">
+    <button style="
+        background:#95a5a6;
+        color:white;
+        border:none;
+        padding:8px 16px;
+        border-radius:8px;
+        cursor:pointer;">
+      ← Voltar para Hospitais
+    </button>
+  </a>
+</div>
+
+<!-- ===================== FORMULÁRIO ===================== -->
+<form method="POST" style="margin-bottom:30px;background:#f4fdf7;padding:20px;border-radius:10px;">
+
+  <div style="display:flex;gap:20px;flex-wrap:wrap;">
+
+    <div>
+      <label><b>Fabricante</b></label><br>
+      <select id="selFabricante" name="fabricante" size="6" style="min-width:200px;"></select>
+    </div>
+
+    <div>
+      <label><b>Produto</b></label><br>
+      <select id="selProduto" name="produto" size="6" required style="min-width:350px;"></select>
+    </div>
+
+    <div>
+      <label><b>Quantidade</b></label><br>
+      <input id="inpQuantidade" type="number" name="quantidade" min="0" value="0" required style="width:100px;">
+    </div>
+
+  </div>
+
+  <!-- Campos ocultos preenchidos automaticamente -->
+  <input type="hidden" name="embalagem" id="embalagem">
+  <input type="hidden" name="referencia" id="referencia">
+  <input type="hidden" name="kcal" id="kcal">
+  <input type="hidden" name="ptn" id="ptn">
+  <input type="hidden" name="lip" id="lip">
+  <input type="hidden" name="fibras" id="fibras">
+  <input type="hidden" name="sodio" id="sodio">
+  <input type="hidden" name="ferro" id="ferro">
+  <input type="hidden" name="potassio" id="potassio">
+  <input type="hidden" name="vit_b12" id="vit_b12">
+  <input type="hidden" name="gordura_saturada" id="gordura_saturada">
+
+  <br>
+  <button type="submit"
+          style="background:#0b7d3e;color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:bold;">
+    💾 Salvar Produto
+  </button>
+</form>
+
+<hr>
+
+<!-- ===================== TABELA ===================== -->
+
+<h3 style="color:#0b7d3e;">Produtos cadastrados</h3>
+
+<table style="width:100%;border-collapse:collapse;margin-top:10px;">
+  <thead>
+    <tr style="background:#0b7d3e;color:white;">
+      <th style="padding:8px;">Fabricante</th>
+      <th>Produto</th>
+      <th>Qtd</th>
+      <th style="width:160px;">Ações</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for item in itens %}
+    <tr id="row-{{ item.id }}" style="border-bottom:1px solid #ddd;">
+      <td style="padding:6px;">{{ item.marca_planilha }}</td>
+      <td>{{ item.produto }}</td>
+      <td>{{ item.quantidade }}</td>
+
+      <td>
+
+        <!-- EDITAR -->
+        <button type="button"
+                class="btn-edit"
+                data-fabricante="{{ item.marca_planilha|e }}"
+                data-produto="{{ item.produto|e }}"
+                data-quantidade="{{ item.quantidade }}"
+                style="background:#2ecc71;color:white;border:none;padding:6px 10px;border-radius:6px;margin-right:5px;cursor:pointer;">
+          ✏ Editar
+        </button>
+
+        <!-- EXCLUIR -->
+        <button type="button"
+                class="btn-del"
+                data-url="{{ url_for('main.produto_delete', hospital_id=hospital.id, produto_id=item.id) }}"
+                data-row="row-{{ item.id }}"
+                style="background:#e74c3c;color:white;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;">
+          🗑 Excluir
+        </button>
+
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- ===================== SCRIPT ===================== -->
+
+<script>
+const CATALOG = {{ catalog_json|safe }};
+const selF = document.getElementById("selFabricante");
+const selP = document.getElementById("selProduto");
+const inpQ = document.getElementById("inpQuantidade");
+
+function uniqueFabricantes() {
+  const set = new Set();
+  CATALOG.forEach(r => {
+    if (r.fabricante) set.add(r.fabricante.trim());
+  });
+  return Array.from(set).sort();
+}
+
+function buildFabricantes() {
+  selF.innerHTML = "";
+  uniqueFabricantes().forEach(f => {
+    const o = document.createElement("option");
+    o.value = f;
+    o.textContent = f;
+    selF.appendChild(o);
+  });
+}
+
+function rebuildProdutos(selectedProduto="") {
+  const fab = selF.value;
+  selP.innerHTML = "";
+
+  const rows = CATALOG.filter(r => r.fabricante === fab);
+
+  rows.forEach(r => {
+    const o = document.createElement("option");
+    o.value = r.produto;
+    o.textContent = r.produto;
+    if (r.produto === selectedProduto) o.selected = true;
+    selP.appendChild(o);
+  });
+}
+
+selF.addEventListener("change", () => rebuildProdutos());
+selP.addEventListener("change", () => {
+  const produto = selP.value;
+  const row = CATALOG.find(r => r.produto === produto);
+  if (!row) return;
+
+  document.getElementById("embalagem").value = row.embalagem || "";
+  document.getElementById("referencia").value = row.referencia || "";
+  document.getElementById("kcal").value = row.kcal || "";
+  document.getElementById("ptn").value = row.ptn || "";
+  document.getElementById("lip").value = row.lip || "";
+  document.getElementById("fibras").value = row.fibras || "";
+  document.getElementById("sodio").value = row.sodio || "";
+  document.getElementById("ferro").value = row.ferro || "";
+  document.getElementById("potassio").value = row.potassio || "";
+  document.getElementById("vit_b12").value = row.vit_b12 || "";
+  document.getElementById("gordura_saturada").value = row.gordura_saturada || "";
+});
+
+document.addEventListener("click", function(e) {
+
+  // EDITAR
+  const editBtn = e.target.closest(".btn-edit");
+  if (editBtn) {
+    selF.value = editBtn.dataset.fabricante;
+    rebuildProdutos(editBtn.dataset.produto);
+    inpQ.value = editBtn.dataset.quantidade;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // EXCLUIR
+  const delBtn = e.target.closest(".btn-del");
+  if (delBtn) {
+    if (!confirm("Deseja realmente excluir este produto?")) return;
+
+    fetch(delBtn.dataset.url, { method: "POST" })
+      .then(r => {
+        if (r.ok) {
+          document.getElementById(delBtn.dataset.row).remove();
+        } else {
+          alert("Erro ao excluir.");
+        }
+      });
+  }
+});
+
+buildFabricantes();
+if (selF.options.length > 0) {
+  selF.selectedIndex = 0;
+  rebuildProdutos();
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Nutri Hospital{% endblock %}</title>
+  <style>
+    body{font-family:Arial,sans-serif;background:#f4f7f6;margin:0}
+    header{background:#2e7d32;color:#fff;padding:15px 30px;font-size:22px;font-weight:700}
+    .container{padding:30px}
+    .top-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+    a{text-decoration:none}
+    button{padding:8px 14px;border:0;border-radius:6px;cursor:pointer;font-size:14px}
+    .btn-green{background:#2e7d32;color:#fff}
+    .btn-light{background:#e8f5e9;color:#2e7d32}
+    .btn-red{background:#c62828;color:#fff}
+    .card{background:#fff;border-radius:10px;padding:16px;margin-bottom:12px;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .col{flex:1;min-width:220px}
+    label{display:block;font-weight:700;margin-top:10px;margin-bottom:4px;color:#2e7d32}
+    input, textarea, select{width:100%;padding:10px;border:1px solid #d7e4d9;border-radius:8px;box-sizing:border-box}
+    textarea{min-height:90px}
+    .flash{padding:10px;border-radius:8px;margin-bottom:14px}
+    .flash-success{background:#e8f5e9;color:#2e7d32}
+    .flash-error{background:#ffebee;color:#c62828}
+    .flash-warning{background:#fff8e1;color:#8d6e63}
+    .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  </style>
+</head>
+<body>
+<header>{% block header %}Nutri Hospital{% endblock %}</header>
+<div class="container">
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</div>
+</body>
+</html>

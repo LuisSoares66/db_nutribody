@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}Info{% endblock %}
+{% block header %}Informações do Hospital{% endblock %}
+
+{% block content %}
+<div class="top-bar">
+  <a href="{{ url_for('main.hospitais') }}"><button class="btn-light">← Voltar</button></a>
+  <a href="{{ url_for('main.contatos', hospital_id=hospital.id) }}"><button class="btn-light">Contatos</button></a>
+  <a href="{{ url_for('main.dados_hospital', hospital_id=hospital.id) }}"><button class="btn-light">Dados</button></a>
+  <a href="{{ url_for('main.hospital_produtos', hospital_id=hospital.id) }}"><button class="btn-light">Produtos</button></a>
+  <a href="{{ url_for('main.relatorios', hospital_id=hospital.id) }}"><button class="btn-light">Relatórios</button></a>
+</div>
+
+<!-- =========================
+     CARD: INFO DO HOSPITAL
+========================= -->
+<form method="POST" class="card">
+  <div class="row">
+    <div class="col">
+      <label>Nome do Hospital</label>
+      <input name="nome_hospital" value="{{ hospital.nome_hospital }}" required>
+    </div>
+    <div class="col">
+      <label>CEP</label>
+      <input name="cep" value="{{ hospital.cep }}">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <label>Endereço</label>
+      <input name="endereco" value="{{ hospital.endereco }}">
+    </div>
+    <div class="col">
+      <label>Número</label>
+      <input name="numero" value="{{ hospital.numero }}">
+    </div>
+    <div class="col">
+      <label>Complemento</label>
+      <input name="complemento" value="{{ hospital.complemento }}">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <label>Cidade</label>
+      <input name="cidade" value="{{ hospital.cidade }}">
+    </div>
+    <div class="col">
+      <label>Estado</label>
+      <input name="estado" maxlength="2" value="{{ hospital.estado }}">
+    </div>
+  </div>
+
+  <!-- (Opcional) mantém as datas "principais" no hospital -->
+  <div class="row">
+    <div class="col">
+      <label>Data da Visita (principal)</label>
+      <input type="date" name="data_visita" value="{{ hospital.data_visita or '' }}">
+    </div>
+    <div class="col">
+      <label>Data de Retorno (principal)</label>
+      <input type="date" name="data_retorno" value="{{ hospital.data_retorno or '' }}">
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-green" type="submit">Salvar</button>
+  </div>
+</form>
+
+<!-- =========================
+     CARD: VISITAS (HISTÓRICO)
+========================= -->
+<div class="card" style="margin-top:16px;">
+  <h3 style="margin:0 0 10px 0;">Visitas / Retornos (histórico)</h3>
+  <div style="color:#556; margin-bottom:12px;">
+    Adicione quantos retornos quiser. Cada linha fica salva na aba <b>Visitas</b> do Excel.
+  </div>
+
+  <!-- FORM: ADICIONAR VISITA -->
+  <form method="POST" action="{{ url_for('main.add_visita', hospital_id=hospital.id) }}">
+    <div class="row">
+      <div class="col">
+        <label>Data da Visita</label>
+        <input type="date" name="data_visita" required>
+      </div>
+      <div class="col">
+        <label>Data de Retorno</label>
+        <input type="date" name="data_retorno">
+      </div>
+      <div class="col" style="flex:2;">
+        <label>Observação</label>
+        <input name="observacao" placeholder="Ex: levou proposta, retorno com compras...">
+      </div>
+    </div>
+
+    <div class="actions" style="margin-top:10px;">
+      <button class="btn-green" type="submit">+ Adicionar</button>
+    </div>
+  </form>
+
+  <hr style="margin:16px 0; border:none; border-top:1px solid #e6e6e6;">
+
+  <!-- LISTA DE VISITAS -->
+  {% if visitas and visitas|length > 0 %}
+    <div style="overflow:auto;">
+      <table style="width:100%; border-collapse:collapse;">
+        <thead>
+          <tr style="background:#0b7d3e; color:white;">
+            <th style="padding:8px; text-align:left;">Data Visita</th>
+            <th style="padding:8px; text-align:left;">Data Retorno</th>
+            <th style="padding:8px; text-align:left;">Observação</th>
+            <th style="padding:8px; width:110px;">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for v in visitas %}
+          <tr style="border-bottom:1px solid #eee;">
+            <td style="padding:8px;">{{ v.data_visita or "-" }}</td>
+            <td style="padding:8px;">{{ v.data_retorno or "-" }}</td>
+            <td style="padding:8px;">{{ v.observacao or "-" }}</td>
+            <td style="padding:8px;">
+              <form method="POST"
+                    action="{{ url_for('main.del_visita', hospital_id=hospital.id, visita_id=v.id) }}"
+                    onsubmit="return confirm('Excluir este registro de visita?');"
+                    style="display:inline;">
+                <button type="submit"
+                        style="background:#e74c3c;color:white;border:none;padding:6px 10px;border-radius:8px;cursor:pointer;">
+                  Excluir
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div style="color:#666;">Nenhuma visita cadastrada ainda.</div>
+  {% endif %}
+</div>
+
+{% endblock %}
