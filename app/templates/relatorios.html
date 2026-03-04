@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Relatórios{% endblock %}
+{% block header %}Relatórios - {{ hospital.nome_hospital }}{% endblock %}
+
+{% block content %}
+<div class="top-bar">
+  <a href="{{ url_for('main.hospitais') }}"><button class="btn-light">← Voltar</button></a>
+  <a href="{{ url_for('main.hospital_info', hospital_id=hospital.id) }}"><button class="btn-light">Info</button></a>
+  <a href="{{ url_for('main.contatos', hospital_id=hospital.id) }}"><button class="btn-light">Contatos</button></a>
+  <a href="{{ url_for('main.dados_hospital', hospital_id=hospital.id) }}"><button class="btn-light">Dados</button></a>
+  <a href="{{ url_for('main.hospital_produtos', hospital_id=hospital.id) }}"><button class="btn-light">Produtos</button></a>
+
+  <a href="{{ url_for('main.relatorio_csv', hospital_id=hospital.id) }}">
+    <button class="btn-green">Baixar CSV</button>
+  </a>
+</div>
+
+<div class="card">
+  <div style="font-weight:700;margin-bottom:8px">Resumo</div>
+  <div><b>Hospital:</b> {{ hospital.nome_hospital }}</div>
+  <div><b>Cidade/UF:</b> {{ hospital.cidade }} - {{ hospital.estado }}</div>
+</div>
+
+<div class="card">
+  <div style="font-weight:700;margin-bottom:8px">Contatos</div>
+  {% if contatos and contatos|length > 0 %}
+    <ul>
+      {% for c in contatos %}
+        <li>{{ c.nome_contato }} — {{ c.cargo or '-' }} — {{ c.telefone or '-' }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    Nenhum contato cadastrado.
+  {% endif %}
+</div>
+
+<div class="card">
+  <div style="font-weight:700;margin-bottom:8px">Dados</div>
+  {% if dados %}
+    <div><b>Especialidade:</b> {{ dados.especialidade or '' }}</div>
+    <div><b>Leitos:</b> {{ dados.leitos or '' }}</div>
+    <div><b>Leitos UTI:</b> {{ dados.leitos_uti or '' }}</div>
+  {% else %}
+    Nenhum dado cadastrado.
+  {% endif %}
+</div>
+
+<div class="card">
+  <div style="font-weight:700;margin-bottom:8px">Produtos</div>
+  {% if produtos and produtos|length > 0 %}
+    <ul>
+      {% for p in produtos %}
+        <li>{{ p.produto }} ({{ p.marca_planilha or '-' }}) — {{ p.quantidade or 0 }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    Nenhum produto cadastrado.
+  {% endif %}
+</div>
+
+{% endblock %}
