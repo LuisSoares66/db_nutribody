@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Contatos{% endblock %}
+{% block header %}Contatos - {{ hospital.nome_hospital }}{% endblock %}
+
+{% block content %}
+<div class="top-bar">
+  <a href="{{ url_for('main.hospitais') }}"><button class="btn-light">← Voltar</button></a>
+  <a href="{{ url_for('main.hospital_info', hospital_id=hospital.id) }}"><button class="btn-light">Info</button></a>
+  <a href="{{ url_for('main.dados_hospital', hospital_id=hospital.id) }}"><button class="btn-light">Dados</button></a>
+  <a href="{{ url_for('main.hospital_produtos', hospital_id=hospital.id) }}"><button class="btn-light">Produtos</button></a>
+</div>
+
+<form method="POST" class="card">
+  <input type="hidden" name="contato_id" value="">
+  <div class="row">
+    <div class="col">
+      <label>Nome do Contato</label>
+      <input name="nome_contato" required>
+    </div>
+    <div class="col">
+      <label>Cargo</label>
+      <input name="cargo">
+    </div>
+    <div class="col">
+      <label>Telefone</label>
+      <input name="telefone">
+    </div>
+  </div>
+  <div class="actions">
+    <button class="btn-green" type="submit">Salvar Contato</button>
+  </div>
+</form>
+
+{% if contatos %}
+  {% for c in contatos %}
+    <div class="card">
+      <div style="font-weight:700">{{ c.nome_contato }}</div>
+      <div style="color:#555;margin-top:4px">Cargo: {{ c.cargo or "-" }} | Tel: {{ c.telefone or "-" }}</div>
+      <div class="actions">
+        <form method="POST" action="{{ url_for('main.excluir_contato', hospital_id=hospital.id, contato_id=c.id) }}"
+              onsubmit="return confirm('Excluir este contato?');" style="display:inline">
+          <button class="btn-red" type="submit">Excluir</button>
+        </form>
+      </div>
+    </div>
+  {% endfor %}
+{% else %}
+  <div class="card">Nenhum contato cadastrado.</div>
+{% endif %}
+{% endblock %}
